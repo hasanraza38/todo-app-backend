@@ -1,64 +1,35 @@
 import dotenv from "dotenv";
 dotenv.config();
-
+import cors from "cors"
 import express from "express";
+import connectDB from "./src/db/index.js"
+import todosRoutes from "./src/routes/todos.routes.js"
+
 const app = express()
 const port = process.env.PORT;
 
+app.use(cors())
 app.use(express.json());
 
 
-const users = [
-  {
-
-    title:"hsan",
-    id : Date.now(),
-  }
-];
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+// routes
 
-// add new user 
+app.use("/api/v1" , todosRoutes )
+// routes
 
 
-app.post("/user" , (req , res) => {
-  const {title } = req.body;
-  if (!title) {
-    res.status(400).json({
-      message : "title required"
-    })
-    return;
-  }
-  
-  users.push({
-    title,
-    id : Date.now(),
+
+connectDB()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`⚙️  Server is running at port : ${port}`);
+    });
   })
-
-  res.status(201).json({
-    message :"user is created",
-    data : users,
+  .catch((err) => {
+    console.log("MONGO DB connection failed !!! ", err);
   });
-  
-})
-
-
-//get all users
-
-app.get("/users" ,(req, res) =>{
-  res.status(200).json({
-    data : users
-  })
-})
-
-
-// app.get('/about', (req, res) => {
-//   res.send('Hello about!')
-// })
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
