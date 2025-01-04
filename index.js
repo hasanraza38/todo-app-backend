@@ -6,7 +6,7 @@ import connectDB from "./src/db/index.js";
 import todosRoutes from "./src/routes/todos.routes.js";
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -22,7 +22,7 @@ app.use("/api/v1", todosRoutes);
 
 connectDB()
   .then(() => {
-    app.listen(port, () => {
+    app.listen(procces.env.PORT, () => {
       console.log(`⚙️  Server is running at port : ${port}`);
     });
   })
